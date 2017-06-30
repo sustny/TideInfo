@@ -62,17 +62,6 @@ getInfo = function(DATE, SPOT) {
   
   //5. 抜き出した情報を分割して配列に格納する
   //Info = [地名、満潮時刻1、満潮潮位1、満潮時刻2、満潮潮位2、満潮時刻3、満潮潮位3、満潮時刻4、満潮潮位4、干潮時刻1、干潮潮位1、干潮時刻2、干潮潮位2、干潮時刻3、干潮潮位3、干潮時刻4、干潮潮位4]
-  /*
-  var Info = [CELL[j][2],
-              '' + parseInt(Row.substr(80,2)) + ':' + parseInt(Row.substr(82,2)), parseInt(Row.substr(84,3)),
-              '' + parseInt(Row.substr(87,2)) + ':' + parseInt(Row.substr(89,2)), parseInt(Row.substr(91,3)),
-              '' + parseInt(Row.substr(94,2)) + ':' + parseInt(Row.substr(96,2)), parseInt(Row.substr(98,3)),
-              '' + parseInt(Row.substr(101,2)) + ':' + parseInt(Row.substr(103,2)), parseInt(Row.substr(105,3)),
-              '' + parseInt(Row.substr(108,2)) + ':' + parseInt(Row.substr(110,2)), parseInt(Row.substr(112,3)),
-              '' + parseInt(Row.substr(115,2)) + ':' + parseInt(Row.substr(117,2)), parseInt(Row.substr(119,3)),
-              '' + parseInt(Row.substr(122,2)) + ':' + parseInt(Row.substr(124,2)), parseInt(Row.substr(126,3)),
-              '' + parseInt(Row.substr(129,2)) + ':' + parseInt(Row.substr(131,2)), parseInt(Row.substr(133,3))];
-              */
   var Info = [];
   Info[0] = CELL[j][2];
   
