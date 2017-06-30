@@ -62,6 +62,7 @@ getInfo = function(DATE, SPOT) {
   
   //5. 抜き出した情報を分割して配列に格納する
   //Info = [地名、満潮時刻1、満潮潮位1、満潮時刻2、満潮潮位2、満潮時刻3、満潮潮位3、満潮時刻4、満潮潮位4、干潮時刻1、干潮潮位1、干潮時刻2、干潮潮位2、干潮時刻3、干潮潮位3、干潮時刻4、干潮潮位4]
+  /*
   var Info = [CELL[j][2],
               '' + parseInt(Row.substr(80,2)) + ':' + parseInt(Row.substr(82,2)), parseInt(Row.substr(84,3)),
               '' + parseInt(Row.substr(87,2)) + ':' + parseInt(Row.substr(89,2)), parseInt(Row.substr(91,3)),
@@ -71,29 +72,47 @@ getInfo = function(DATE, SPOT) {
               '' + parseInt(Row.substr(115,2)) + ':' + parseInt(Row.substr(117,2)), parseInt(Row.substr(119,3)),
               '' + parseInt(Row.substr(122,2)) + ':' + parseInt(Row.substr(124,2)), parseInt(Row.substr(126,3)),
               '' + parseInt(Row.substr(129,2)) + ':' + parseInt(Row.substr(131,2)), parseInt(Row.substr(133,3))];
+              */
+  var Info = [];
+  Info[0] = CELL[j][2];
+  
+  j=0;
+  for(i=1;i<=16;i+=2) {
+    if(parseInt(Row.substr(82+(j*7),2)) < 10) {
+      Info[i] = '' + parseInt(Row.substr(80+(j*7),2)) + ':0' + parseInt(Row.substr(82+(j*7),2));
+    } else {
+      Info[i] = '' + parseInt(Row.substr(80+(j*7),2)) + ':' + parseInt(Row.substr(82+(j*7),2));
+    }
+    Info[i+1] = parseInt(Row.substr(84+(j*7),3))
+    j++;
+  }
   
   //6. 情報が格納された配列を返す
   return Info;
 }
 
 function TideInfo_Main() {
-  var date = Browser.inputBox('日付を入れろ(ex:20170101)', Browser.Buttons.OK_CANCEL);
+  var FILE = SpreadsheetApp.getActiveSpreadsheet();
+  var SHEET = FILE.getSheetByName('Info');
+  var CELL = SHEET.getDataRange().getValues();
+  var date = CELL[0][2];
   if(date == '') { //入力がないなら今日
     date = Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyyMMdd');
   }
-  var spot = Browser.inputBox('場所を入れろ(ex:35.305276, 139.317403)', Browser.Buttons.OK_CANCEL);
+  var spot = CELL[0][6];
   if(spot == '') { //入力がないなら東京
     spot = '35.640342, 139.855059';
   }
   var info = getInfo(date, spot);
-  var message = '' + info[0] + 'の潮位(' + date.substr(0,4) + '/' + date.substr(4,2) + '/' + date.substr(6,2) + ')\\n'
-             + '満潮1: ' + info[1] + ' ' + info[2] + 'cm\\n'
-             + '満潮2: ' + info[3] + ' ' + info[4] + 'cm\\n'
-             + '満潮3: ' + info[5] + ' ' + info[6] + 'cm\\n'
-             + '満潮4: ' + info[7] + ' ' + info[8] + 'cm\\n'
-             + '干潮1: ' + info[9] + ' ' + info[10] + 'cm\\n'
-             + '干潮2: ' + info[11] + ' ' + info[12] + 'cm\\n'
-             + '干潮3: ' + info[13] + ' ' + info[14] + 'cm\\n'
-             + '干潮4: ' + info[15] + ' ' + info[16] + 'cm';
-  Browser.msgBox(message);
+  
+  SHEET.getRange(2,1).setValue('');
+  SHEET.getRange(5,1,1,16).setValue('');
+  
+  SHEET.getRange(2,1).setValue(info[0]);
+  for(i=1;i<=16;i+=2) {
+    if(info[i+1] != 999) {
+      SHEET.getRange(5,i).setValue(info[i]);
+      SHEET.getRange(5,i+1).setValue(info[i+1]);
+    }
+  }
 }
